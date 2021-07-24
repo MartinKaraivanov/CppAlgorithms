@@ -1,0 +1,90 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct DanniZaVrah{
+    int broiVTova;
+    int lqvNomer;
+    int desenNomer;
+    int stoinost;
+};
+
+int broiUchastnici;
+
+int toziKolkoSaGoIzprevarili[1000010];
+
+int koiETochnoSledNego[1000010];
+
+vector<int> tukaKoiE;
+
+int tukaImaLiNula[1000010];
+
+int broiNujniVarhove;
+
+int darvo[3000010];
+
+void praveneNaBroiNujniVarhove(){
+    int brNujniVrhv = 1;
+
+    while(true){
+        if(brNujniVrhv >= broiUchastnici){
+            brNujniVrhv *= 2;
+            break;
+        }
+
+        brNujniVrhv *= 2;
+    }
+
+    broiNujniVarhove = brNujniVrhv;
+}
+
+int daiListo(int index){
+    return index + broiNujniVarhove/2;
+}
+
+void update(int otKade, int doKade, int sKolko){
+    int lqvIndex = daiListo(otKade);
+    int desenIndex = daiListo(doKade);
+
+    if(lqvIndex == desenIndex){
+
+    }
+}
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin>>broiUchastnici;
+
+    for(int i = 1; i <= broiUchastnici; i++){
+        cin>>toziKolkoSaGoIzprevarili[i];
+        tukaKoiE.push_back(0);
+        tukaImaLiNula[i] = 1;
+    }
+    tukaKoiE.push_back(0);
+    tukaImaLiNula[0] = 1;
+
+    praveneNaBroiNujniVarhove();
+
+    for(int i = 1; i <= broiUchastnici; i++){
+        int brNuli = toziKolkoSaGoIzprevarili[i] + 1;
+        int index = 0;
+        while(brNuli > 0){
+            index++;
+            if(tukaKoiE[index] == 0){
+                brNuli--;
+            }
+        }
+
+        tukaKoiE[index] = i;
+        //cout<<"slojih na "<<index<<" "<<i<<endl;
+    }
+
+    for(unsigned int i = 1; i < tukaKoiE.size(); i++){
+        cout<<tukaKoiE[i]<<endl;
+    }
+
+    return 0;
+}

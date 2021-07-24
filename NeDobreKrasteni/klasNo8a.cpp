@@ -1,0 +1,6 @@
+#include<iostream>
+using namespae std;
+int main(){
+
+    return 0;
+}

@@ -1,0 +1,95 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<map>
+using namespace std;
+
+int broiKupchinki;
+
+int vavedeno[25];
+
+vector<int> kupchinki;
+
+int zakodiraniKupchinki;
+
+map<vector<int>, int> priTolkovaKakvaEPromenlivataBezNot;
+
+bool pechelivshaLiEPoziciqta(vector<int> kamacheta){
+    if(priTolkovaKakvaEPromenlivataBezNot[kamacheta] == 1){
+        return !false;
+    }else{
+        if(priTolkovaKakvaEPromenlivataBezNot[kamacheta] == 2){
+            return !true;
+        }
+    }
+
+    bool imaLiPechelivshaPoziciqZaNas = false;
+
+    for(unsigned int i = 0; i < kamacheta.size(); i++){
+        for(unsigned int j = 0; j < i; j++){
+            if(kamacheta[i] > kamacheta[j]){
+                vector<int> nov = kamacheta;
+                nov.erase(nov.begin() + i);
+                nov.insert(nov.begin() + j, kamacheta[j]);
+                bool pechelivshoLiE = pechelivshaLiEPoziciqta(nov);
+                if(pechelivshoLiE){
+                    imaLiPechelivshaPoziciqZaNas = true;
+                    break;
+                }
+            }
+        }
+        if(imaLiPechelivshaPoziciqZaNas == true){
+            break;
+        }
+    }
+
+    if(imaLiPechelivshaPoziciqZaNas == false){
+        priTolkovaKakvaEPromenlivataBezNot[kamacheta] = 1;
+    }else{
+        priTolkovaKakvaEPromenlivataBezNot[kamacheta] = 2;
+    }
+
+    return !imaLiPechelivshaPoziciqZaNas;
+}
+
+int main(){
+    cin>>broiKupchinki;
+
+    for(int i = 0; i < broiKupchinki; i++){
+        cin>>vavedeno[i];
+    }
+
+    sort(vavedeno, vavedeno + broiKupchinki);
+
+    int nomercheZaKamache = 0;
+
+    for(int i = 0; i < broiKupchinki; i++){
+        int segashno = vavedeno[i];
+        int j = i;
+        while(vavedeno[j] == segashno){
+            kupchinki.push_back(nomercheZaKamache);
+            j++;
+        }
+        nomercheZaKamache++;
+        i = j - 1;
+    }
+
+    int chislence = -1;
+
+    for(unsigned int i = 0; i < kupchinki.size(); i++){
+        if(kupchinki[i] != chislence){
+            chislence = kupchinki[i];
+            zakodiraniKupchinki = zakodiraniKupchinki*10 + 1;
+        }else{
+            zakodiraniKupchinki = zakodiraniKupchinki*10 + 0;
+        }
+    }
+
+    cout<<zakodiraniKupchinki<<endl;
+
+    bool pecheliLiParviq = pechelivshaLiEPoziciqta(kupchinki);
+
+    cout<<!pecheliLiParviq<<endl;
+
+    return 0;
+}

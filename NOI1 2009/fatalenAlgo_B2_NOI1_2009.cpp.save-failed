@@ -1,0 +1,37 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+int broiVaprosi;
+
+string otgovori;
+
+bool sastavnoLiE[1050];
+
+void eratosten(){
+    double korenKvadraten = sqrt(1050);
+
+    for(int i = 2; i <= korenKvadraten + 1; i++){
+        if(sastavnoLiE[i] == false){
+            for(int j = i*i; j < i; j += i){
+                sastavnoLiE[j] = true;
+            }
+        }
+    }
+}
+
+int naiMalkotoProstoPoneNashto(int otKoe){
+    for(){
+
+    }
+}
+
+int main(){
+    cin>>broiVaprosi;
+
+    cin>>otgovori;
+
+
+
+    return 0;
+}

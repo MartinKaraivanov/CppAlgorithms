@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int broiKupchinki;
+
+int broiKamaniVKupchinka[25];
+
+int broiTakuvBroi[100000000];
+
+int naiGolqmaKupchinka;
+
+bool pechelivshaPoziciqLiE(int broiRazlichniKupchinki){
+    if(broiRazlichniKupchinki == 1){
+        return true;
+    }
+
+    bool imameLiPechelivshaPoziciqZaTozi = false;
+
+    for(int i = 1; i <= naiGolqmaKupchinka; i++){
+        if(broiTakuvBroi[i] > 0){
+            for(int j = 1; j < i; j++){
+                if(broiTakuvBroi[j] > 0){
+                    broiTakuvBroi[j]++;
+                    broiTakuvBroi[i]--;
+
+                }
+            }
+        }
+    }
+
+
+}
+
+int main(){
+    cin>>broiKupchinki;
+
+    for(int i = 0; i < broiKupchinki; i++){
+        int broiTuka;
+        cin>>broiTuka;
+        broiKamaniVKupchinka[i] = broiTuka;
+        broiTakuvBroi[broiTuka]++;
+        kupchinkiKoitoImame.push_back(broiTuka);
+    }
+
+
+    return 0;
+}

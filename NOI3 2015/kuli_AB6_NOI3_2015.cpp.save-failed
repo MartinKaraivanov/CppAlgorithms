@@ -1,0 +1,27 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int broiKuli;
+
+int broiOtKoitoEPoGolqma[1000010];
+
+int podredbaNaKuli[100010];
+
+int main(){
+    cin>>broiKuli;
+
+    for(int i = 0; i < broiKuli; i++){
+        cin>>broiOtKoitoEPoGolqma[i];
+    }
+
+    for(int i = 1; i <= broiKuli; i++){
+        podredbaNaKuli[i - 1] = i;
+    }
+
+    do{
+
+    }while();
+
+    return 0;
+}

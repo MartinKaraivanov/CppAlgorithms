@@ -1,0 +1,135 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<queue>
+using namespace std;
+
+vector<vector<int>> nachalen;
+
+vector<vector<int>> nulataNalqvo(vector<vector<int>> daskata){
+    vector<vector<int>> segashen = daskata;
+    for(int i = 0; i < 4; i++){
+        for(int j = 1; j < 4; j++){
+            if(segashen[i][j] == 0){
+                segashen[i][j] = segashen[i][j - 1];
+                segashen[i][j - 1] = 0;
+                break;
+            }
+        }
+    }
+
+    return segashen;
+}
+
+vector<vector<int>> nulataNadqsno(vector<vector<int>> daskata){
+    vector<vector<int>> segashen = daskata;
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 3; j++){
+            if(segashen[i][j] == 0){
+                segashen[i][j] = segashen[i][j + 1];
+                segashen[i][j + 1] = 0;
+                break;
+            }
+        }
+    }
+
+    return segashen;
+}
+
+vector<vector<int>> nulataNagore(vector<vector<int>> daskata){
+    vector<vector<int>> segashen = daskata;
+    for(int i = 1; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            if(segashen[i][j] == 0){
+                segashen[i][j] = segashen[i - 1][j];
+                segashen[i - 1][j] = 0;
+                break;
+            }
+        }
+    }
+    return segashen;
+}
+
+vector<vector<int>> nulaaNadolu(vector<vector<int>> daskata){
+    vector<vector<int>> segashen = daskata;
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 4; j++){
+            if(segashen[i][j] == 0){
+                segashen[i][j] = segashen[i + 1][j];
+                segashen[i + 1][j] = 0;
+                break;
+            }
+        }
+    }
+    return segashen;
+}
+
+bool takuvKakuvtoIskameLiE(vector<vector<int>> daska){
+    bool dobraLiE = true;
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 1; j < 4; j++){
+            if(daska[i][j] <= daska[i][j - 1] && daska[i][j] != 0){
+                dobraLiE = false;
+                break;
+            }
+        }
+        if(dobraLiE == false){
+            break;
+        }
+    }
+    return dobraLiE;
+}
+
+map<vector<vector<int>>, bool> visited;
+map<vector<vector<int>>, int> dalbochina;
+
+int bfs(){
+    queue<vector<vector<int>>> q;
+    q.push(nachalen);
+    dalbochina[nachalen] = 0;
+
+    int zaKolkoHoda = -1;
+
+    while(q.empty() == false){
+        vector<vector<int>> naiOtgore = q.front();
+        q.pop();
+
+        if(takuvKakuvtoIskameLiE(naiOtgore) == true){
+            zaKolkoHoda = dalbochina[naiOtgore];
+            break;
+        }
+
+        if(visited[naiOtgore] == true){
+            continue;
+        }
+
+        visited[naiOtgore] = true;
+
+        vector<vector<int>> sNulataNalqvo = nulataNalqvo(naiOtgore);
+        vector<vector<int>> sNulataNadqsno = nulataNadqsno(naiOtgore);
+        vector<vector<int>> sNulataNagore = nulataNagore(naiOtgore);
+        vector<vector<int>> sNulataNadolu = nulaaNadolu(naiOtgore);
+
+
+
+    }
+
+    return zaKolkoHoda;
+}
+
+int main(){
+    for(int i = 0; i < 4; i++){
+        vector<int> segshno;
+        for(int j = 0; j < 4; j++){
+            int tukashnaStoinost;
+            cin>>tukashnaStoinost;
+            segshno.push_back(tukashnaStoinost);
+        }
+        nachalen.push_back(segshno);
+    }
+
+    cout<<takuvKakuvtoIskameLiE(nachalen)<<endl;
+
+    return 0;
+}

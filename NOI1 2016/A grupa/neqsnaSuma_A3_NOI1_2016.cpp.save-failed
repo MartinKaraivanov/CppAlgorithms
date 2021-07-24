@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct DanniZaVrahstaneto(char edinBit, char drugBit, char prenos){
+
+};
+
+string parvo;
+string vtoro;
+
+vector<char> bitoveParvo;
+vector<char> bitoveVtoro;
+
+int main(){
+    cin>>parvo>>vtoro;
+
+    bitoveParvo.push_back('0');
+    bitoveVtoro.push_back('0');
+
+    if(parvo.size() < vtoro.size()){
+        for(unsigned int i = 0; i < vtoro.size() - parvo.size(); i++){
+            bitoveParvo.push_back('0');
+        }
+    }else{
+        for(unsigned int i = 0; i < parvo.size() - vtoro.size(); i++){
+            bitoveVtoro.push_back('0');
+        }
+    }
+
+    for(unsigned int i = 0; i < parvo.size(); i++){
+        bitoveParvo.push_back(parvo[i]);
+    }
+
+    for(unsigned int i = 0; i < vtoro.size(); i++){
+        bitoveVtoro.push_back(vtoro[i]);
+    }
+
+    for(int i = 0; i < ){
+
+    }
+
+    return 0;
+}

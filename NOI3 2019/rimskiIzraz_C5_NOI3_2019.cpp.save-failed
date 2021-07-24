@@ -1,0 +1,307 @@
+#include<iostream>
+#include<stack>
+#include<queue>
+using namespace std;
+
+double stoinostNaCifrata(char cifra){
+    if(cifra == 'I'){
+        return (double)1;
+    }
+    if(cifra == 'V'){
+        return (double)5;
+    }
+    if(cifra == 'X'){
+        return (double)10;
+    }
+    if(cifra == 'L'){
+        return (double)50;
+    }
+    if(cifra == 'C'){
+        return (double)100;
+    }
+    if(cifra == 'D'){
+        return (double)500;
+    }
+    if(cifra == 'M'){
+        return (double)1000;
+    }
+
+    return -1;
+}
+
+double vDesetichna(string rimsko){
+
+    double resultat = 0;
+
+    for(int i = 0; i < (int)rimsko.size(); i++){
+        double parvo = stoinostNaCifrata(rimsko[i]);
+
+        if(i + 1 < (int)rimsko.size()){
+            double vtoro = stoinostNaCifrata(rimsko[i + 1]);
+
+            if(parvo >= vtoro){
+                resultat +=  parvo;
+            }else{
+                resultat += vtoro - parvo;
+                i++;
+            }
+
+        }else{
+            resultat += parvo;
+        }
+    }
+
+    return resultat;
+}
+
+int prioritet(char operaciq){
+    if(operaciq == '~'){
+        return 3;
+    }
+    if(operaciq == '*' || operaciq == '/'){
+        return 2;
+    }
+    if(operaciq == '+' || operaciq == '-'){
+        return 1;
+    }
+    return 0;
+}
+
+double napraviOperaciqta(double a, double b, char operaciq){
+    if(operaciq == '+'){
+        return (double)a + b;
+    }
+    if(operaciq == '-'){
+        return (double)a - b;
+    }
+    if(operaciq == '*'){
+        return (double)a*b;
+    }
+    if(operaciq == '/'){
+        return (double)a/b;
+    }
+    return (double)-b;
+}
+
+bool bukvaLiE(char neshto){
+    if(neshto == 'I' || neshto == 'V' || neshto == 'X' || neshto == 'L' || neshto == 'C' || neshto == 'D' || neshto == 'M'){
+        return true;
+    }
+
+    return false;
+}
+
+double izchisliStoinostta(string izraz){
+    stack<double> stoinosti;
+    stack<char> operatori;
+
+    for(int i = 0; i < (int)izraz.size(); i++){
+        if(izraz[i] == ' '){
+            continue;
+        }else{
+            if(izraz[i] == '('){
+                operatori.push(izraz[i]);
+            }else{
+                if(bukvaLiE(izraz[i]) == true){
+                    string rimskoChislo = "";
+
+                    while(i < (int)izraz.size() && bukvaLiE(izraz[i]) == true){
+                        rimskoChislo += izraz[i];
+                        i++;
+                    }
+
+                    i--;
+                    double istinskaStoinost = vDesetichna(rimskoChislo);
+
+                    stoinosti.push(istinskaStoinost);
+                }else{
+                    if(izraz[i] == ')'){
+                        while(operatori.empty() == false && operatori.top() != '('){
+                            char oper = operatori.top();
+                            operatori.pop();
+
+                            double vtoraStoinost = stoinosti.top();
+                            stoinosti.pop();
+
+                            double parvaStoinost = 0;
+
+                            if(oper != '~'){
+                                parvaStoinost = stoinosti.top();
+                                stoinosti.pop();
+                            }
+
+                            stoinosti.push(napraviOperaciqta(parvaStoinost, vtoraStoinost, oper));
+                        }
+
+                        if(operatori.empty() == false){
+                            operatori.pop();
+                        }
+                    }else{
+                        while(operatori.empty() == false &&
+                                prioritet(operatori.top()) >= prioritet(izraz[i]))
+                        {
+                            char oper = operatori.top();
+                            operatori.pop();
+
+                            double vtoraStoinost = stoinosti.top();
+                            stoinosti.pop();
+
+                            double parvaStoinost = 0;
+
+                            if(oper != '~'){
+                                parvaStoinost = stoinosti.top();
+                                stoinosti.pop();
+                            }
+
+                            stoinosti.push(napraviOperaciqta(parvaStoinost, vtoraStoinost, oper));
+                        }
+
+                        operatori.push(izraz[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    while(operatori.empty() == false){
+        char oper = operatori.top();
+        operatori.pop();
+
+        double vtoraStoinost = stoinosti.top();
+        stoinosti.pop();
+
+        double parvaStoinost = 0;
+
+        if(oper != '~'){
+            parvaStoinost = stoinosti.top();
+            stoinosti.pop();
+        }
+
+        stoinosti.push(napraviOperaciqta(parvaStoinost, vtoraStoinost, oper));
+    }
+
+    return stoinosti.top();
+}
+
+queue<string> prevrashtaneVOPZ(string izraz){
+    queue<string> obratenPolskiZ;
+
+    stack<char> operatori;
+
+    for(int i = 0; i < (int)izraz.size(); i++){
+
+        if(bukvaLiE(izraz[i]) == true){
+            string tuka;
+            while(bukvaLiE(izraz[i]) == true){
+                tuka += izraz[i];
+                i++;
+            }
+            i--;
+
+            obratenPolskiZ.push(tuka);
+        }else{
+            if(izraz[i] == '('){
+                operatori.push(izraz[i]);
+            }else{
+                if(izraz[i] == ')'){
+                    while(operatori.empty() == false && operatori.top() != '('){
+                        char tukaOperator = operatori.top();
+                        operatori.pop();
+                        string tuka;
+                        tuka += tukaOperator;
+                        obratenPolskiZ.push(tuka);
+                    }
+                    operatori.pop();
+                }else{
+                    while(operatori.empty() == false && operatori.top() != '(' &&
+                         prioritet(operatori.top()) > prioritet(izraz[i]))
+                    {
+                        char tukaOperator = operatori.top();
+                        operatori.pop();
+                        string tuka;
+                        tuka += tukaOperator;
+                        obratenPolskiZ.push(tuka);
+                    }
+                    operatori.push(izraz[i]);
+                }
+            }
+        }
+    }
+
+    while(operatori.empty() == false){
+        char tukaOperator = operatori.top();
+        operatori.pop();
+        string tuka;
+        tuka += tukaOperator;
+        obratenPolskiZ.push(tuka);
+    }
+
+    return obratenPolskiZ;
+}
+
+double otOPZVCHislo(queue<string> opz){
+    stack<double> rezultati;
+
+    while(opz.empty() == false){
+        string naiOtpred = opz.front();
+        opz.pop();
+
+        if(bukvaLiE(naiOtpred[0]) == true){
+            double chislo = vDesetichna(naiOtpred);
+
+            rezultati.push(chislo);
+        }else{
+            char operaciq = naiOtpred[0];
+
+            double vtoroChislo = rezultati.top();
+            rezultati.pop();
+
+            double parvoChislo = 0;
+
+            if(operaciq != '~'){
+                parvoChislo = rezultati.top();
+                rezultati.pop();
+            }
+
+            double polucheno = napraviOperaciqta(parvoChislo, vtoroChislo, operaciq);
+
+            rezultati.push(polucheno);
+        }
+    }
+
+
+}
+
+int main(){
+    string rimskiIzraz;
+
+    cin>>rimskiIzraz;
+
+    for(int i = 0; i < (int)rimskiIzraz.size(); i++){
+        if((i == 0 && rimskiIzraz[i] == '+') ||
+           (rimskiIzraz[i] == '+' && rimskiIzraz[i-1] == '('))
+        {
+            rimskiIzraz[i] = ' ';
+        }else{
+            if((i == 0 && rimskiIzraz[i] == '-') ||
+                (rimskiIzraz[i] == '-' && rimskiIzraz[i - 1] == '('))
+            {
+                rimskiIzraz[i] = '~';
+            }
+        }
+    }
+
+    queue<string> obz = prevrashtaneVOPZ(rimskiIzraz);
+
+    while(obz.empty() == false){
+        cout<<obz.front()<<" ";
+        obz.pop();
+    }
+    cout<<endl;
+
+    double otgovor = izchisliStoinostta(rimskiIzraz);
+
+    cout<<otgovor<<endl;
+
+    return 0;
+}

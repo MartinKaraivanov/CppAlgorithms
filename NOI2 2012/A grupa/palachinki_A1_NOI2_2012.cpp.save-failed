@@ -1,0 +1,44 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+long long broiPalachinki;
+int broiKotloni;
+
+int vremeZaToziKotlon[23];
+
+long long broiPalachinkiZaTakovaVreme(long long zaVreme){
+
+}
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin>>broiPalachinki>>broiKotloni;
+
+    for(int i = 0; i < broiKotloni; i++){
+        cin>>vremeZaToziKotlon[i];
+    }
+
+    for(int i = 0; i < broiKotloni; i++){
+        q.push({0, vremeZaToziKotlon[i]});
+    }
+
+    long long lqvKrai = 0;
+    long long desenKrai = vremeZaToziKotlon[0]*broiPalachinki;
+
+    while(lqvKrai < desenKrai){
+        long long poSredata = (lqvKrai + desenKrai)/2;
+
+
+    }
+
+    long long kogaSheStaneGotovo = 0;
+
+    cout<<kogaSheStaneGotovo<<endl;
+
+    return 0;
+}

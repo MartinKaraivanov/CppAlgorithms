@@ -1,0 +1,213 @@
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<iomanip>
+#include<cmath>
+using namespace std;
+
+/*vector<int> otKade;
+vector<int> doKade;
+
+vector<int> sabirane(vector<int> ednoChislo, vector<int> drugoChislo){
+    int edinIndex = ednoChislo.size() - 1;
+    int drugIndex = drugoChislo.size() - 1;
+
+    stack<int> cifri;
+
+    int ostatak = 0;
+
+    while(edinIndex >= 0 || drugIndex >= 0){
+        int ednataCifra;
+        int drugataCifra;
+
+        if(edinIndex >= 0){
+            ednataCifra = ednoChislo[edinIndex];
+        }else{
+            ednataCifra = 0;
+        }
+
+        if(drugIndex >= 0){
+            drugataCifra = drugoChislo[drugIndex];
+        }else{
+            drugataCifra = 0;
+        }
+
+        int tukaCifra = (ednataCifra + drugataCifra + ostatak)%10;
+
+        ostatak = (ednataCifra + drugataCifra + ostatak)/10;
+
+        cifri.push(tukaCifra);
+
+        edinIndex--;
+        drugIndex--;
+    }
+
+    vector<int> rezultat;
+
+    while(cifri.empty() == false){
+        rezultat.push_back(cifri.top());
+        cifri.pop();
+    }
+
+    return rezultat;
+}
+
+vector<int> izvajdane(vector<int> umalqemo, vector<int> umalitel){
+    int edinIndex = umalqemo.size() - 1;
+    int drugIndex = umalitel.size() - 1;
+
+    stack<int> cifri;
+
+    int ostatak = 0;
+
+    while(edinIndex >= 0){
+        int ednaCifra = umalqemo[edinIndex];
+        int drugaCifra;
+
+        if(drugIndex >= 0){
+            drugaCifra = umalitel[drugIndex];
+        }else{
+            drugaCifra = 0;
+        }
+
+        int tukaCifra = ednaCifra - drugaCifra - ostatak;
+
+        if(tukaCifra < 0){
+            tukaCifra += 10;
+            ostatak = 1;
+        }else{
+            ostatak = 0;
+        }
+
+        cifri.push(tukaCifra);
+
+        edinIndex--;
+        drugIndex--;
+    }
+
+    vector<int> rezultat;
+
+    bool slojiliLiSmeVeche = false;
+
+    while(cifri.empty() == false){
+        if(slojiliLiSmeVeche == false && cifri.top() == 0){
+            cifri.pop();
+        }
+
+        slojiliLiSmeVeche = true;
+
+        rezultat.push_back(cifri.top());
+        cifri.pop();
+    }
+
+    return rezultat;
+}
+
+vector<int> delenieNaDve(vector<int> chislo){
+    vector<int> rezultat;
+
+    bool napraviliLiSmeDelenieVeche = false;
+
+    int ostatak = 0;
+
+    for(unsigned int i = 0; i < chislo.size(); i++){
+        int tukaCifra = (chislo[i] + 10*ostatak)/2;
+
+        if(tukaCifra == 0 && napraviliLiSmeDelenieVeche == false){
+
+        }else{
+            rezultat.push_back(tukaCifra);
+        }
+
+        napraviliLiSmeDelenieVeche = true;
+
+        ostatak = (10*ostatak + chislo[i])%10;
+    }
+
+    return rezultat;
+}
+
+bool tovaPoMalkoLiEOtDrugoto(vector<int> parvoto, vector<int> vtoroto){
+    if(parvoto.size() < vtoroto.size()){
+        return true;
+    }
+
+    if(parvoto.size() > vtoroto.size()){
+        return false;
+    }
+
+    bool poMalkoLiE = true;
+
+    for(unsigned int i = 0; i < parvoto.size(); i++){
+        if(parvoto[i] > vtoroto[i]){
+            poMalkoLiE = false;
+            break;
+        }
+    }
+
+    if(poMalkoLiE == true && parvoto[parvoto.size() - 1] == vtoroto[vtoroto.size() - 1]){
+        poMalkoLiE = false;
+    }
+
+    return poMalkoLiE;
+}
+
+vector<int> otgovorZaDo(vector<int> doKoeChislo){
+    vector<int> lqvKrai = {1};
+    vector<int> desenKrai = doKoeChislo;
+
+    while(tovaPoMalkoLiEOtDrugoto(lqvKrai, desenKrai) == true){
+        vector<int> poSredata = delenieNaDve(sabirane(lqvKrai, desenKrai));
+
+
+    }
+}*/
+
+long double naiGolqmotoDo(long double krai){
+    long double lqvKrai = 1;
+    long double desenKrai = krai;
+
+    while(lqvKrai < desenKrai){
+        long double poSredata = floor((lqvKrai + desenKrai)/2);
+
+        cout<<fixed<<setprecision(0)<<lqvKrai<<" "<<desenKrai<<endl;
+
+        cout<<fixed<<setprecision(0)<<krai<<" "<<poSredata<<" ";
+
+        if(krai - (poSredata*poSredata + poSredata) > -0.000000001){
+            lqvKrai = poSredata + 1;
+            cout<<"tuova stava"<<endl;
+        }else{
+            desenKrai = poSredata;
+            cout<<"tova ne stava "<<endl;
+        }
+    }
+
+    cout<<"tuka vrashtame "<<fixed<<setprecision(0)<<lqvKrai<<endl;
+    return lqvKrai;
+}
+
+int main(){
+    /*string parvoChislo;
+    string vtoroChislo;
+
+    cin>>parvoChislo>>vtoroChislo;
+
+    for(unsigned int i = 0; i < parvoChislo.size(); i++){
+        otKade.push_back(parvoChislo[i] - '0');
+    }
+
+    for(unsigned int i = 0; i < vtoroChislo.size(); i++){
+        doKade.push_back(vtoroChislo[i] - '0');
+    }*/
+
+
+    long double otKade;
+    long double doKade;
+
+    cin>>otKade>>doKade;
+
+    cout<<fixed<<setprecision(0)<<naiGolqmotoDo(doKade) - naiGolqmotoDo(otKade - 1)<<endl;
+
+    return 0;
+}

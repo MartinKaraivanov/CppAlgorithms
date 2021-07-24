@@ -1,0 +1,18 @@
+#include<iostream>
+using namespace std;
+
+int k;
+int n;
+
+int nod(int a, int b){
+
+}
+
+int main(){
+    cin>>k>>n;
+
+    int sborNaChisliteli = 0;
+    int znamenatel = 1;
+
+    return 0;
+}

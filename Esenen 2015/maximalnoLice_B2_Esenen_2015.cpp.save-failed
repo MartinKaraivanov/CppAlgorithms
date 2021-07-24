@@ -1,0 +1,32 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+
+int broiKoloni;
+int visochini[1000010];
+
+int broiOtlqvoDolepeniPoVisoki[1000010];
+int broiOtdqsnoDolepeniPoVisoki[1000010];
+
+int main(){
+    cin>>broiKoloni;
+
+    for(int i = 0; i < broiKoloni; i++){
+        cin>>visochini[i];
+    }
+
+    stack<int> s;
+
+    for(int i = 0; i < broiKoloni; i++){
+        while(s.empty() == false){
+            if(s.top() < visochini[i]){
+                s.pop();
+            }else{
+                break;
+            }
+        }
+
+    }
+
+    return 0;
+}

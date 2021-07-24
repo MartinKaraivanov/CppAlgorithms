@@ -1,0 +1,59 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct DanniZaPatq{
+    int doGrad;
+    int razstoqnie;
+};
+
+int broiKrastovishta;
+
+int start;
+int finaal;
+
+
+vector<DanniZaPatq> sasedstvo[200100];
+
+int otKoqKomponentaE[200100];
+int nomerche = 1;
+
+int naiKasPatDo[200100];
+
+void praveneNaKomponenti(int vrah, int nomche){
+    if(otKoqKomponentaE[vrah] == 0){
+        otKoqKomponentaE[vrah] = nomche;
+        for(unsigned int i = 0; i < sasedstvo[vrah].size(); i++){
+            praveneNaKomponenti(sasedstvo[vrah][i].doGrad, nomche);
+        }
+    }
+}
+
+int main(){
+    cin>>broiKrastovishta>>start>>finaal;
+
+    int ot;
+
+    while(cin>>ot){
+        int doKade;
+        cin>>doKade;
+        DanniZaPatq zaDob = {doKade, 0};
+        sasedstvo[ot].push_back(zaDob);
+        zaDob = {ot, 1};
+        sasedstvo[doKade].push_back(zaDob);
+    }
+
+    for(int i = 1; i <= broiKrastovishta; i++){
+        if(otKoqKomponentaE[i] == 0){
+            praveneNaKomponenti(i, nomerche);
+            nomerche++;
+        }
+    }
+
+    if(otKoqKomponentaE[start] != otKoqKomponentaE[finaal]){
+        cout<<"X"<<endl;
+        return 0;
+    }
+
+    return 0;
+}

@@ -1,0 +1,103 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int broiGradove;
+int broiPatishta;
+int broiPitaniq;
+
+vector<int> sasedstvo[1010];
+
+int otKoiKomponentE[1010];
+int nomerche;
+
+int korenNaDarvotoNa[1010];
+
+void dfs(int segashen, int koren){
+    if(otKoiKomponentE[segashen] != 0){
+        return ;
+    }
+
+    otKoiKomponentE[segashen] = nomerche;
+    korenNaDarvotoNa[segashen] = koren;
+
+    for(int i = 0; i < (int)sasedstvo[segashen].size(); i++){
+        dfs(sasedstvo[segashen][i], koren);
+    }
+}
+
+void praveneNaKomp(){
+    for(int i = 1; i <= broiGradove; i++){
+        if(otKoiKomponentE[i] == 0){
+            nomerche++;
+            dfs(i, i);
+        }
+    }
+}
+
+string otgovor;
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin>>broiGradove>>broiPatishta;
+
+    for(int i = 0; i < broiPatishta; i++){
+        int otKade;
+        int doKade;
+
+        cin>>otKade>>doKade;
+
+        sasedstvo[otKade].push_back(doKade);
+        sasedstvo[doKade].push_back(otKade);
+    }
+
+    praveneNaKomp();
+
+    cin>>broiPitaniq;
+
+    for(int i = 0; i < broiPitaniq; i++){
+        int tip;
+        int otKade;
+        int doKade;
+
+        cin>>tip>>otKade>>doKade;
+
+        if(tip == 1){
+            if(otKoiKomponentE[korenNaDarvotoNa[otKade]] == otKoiKomponentE[korenNaDarvotoNa[doKade]]){
+                otgovor.push_back('1');
+            }else{
+                otgovor.push_back('0');
+            }
+        }else{
+            if(tip == 2){
+                sasedstvo[otKade].push_back(doKade);
+                sasedstvo[doKade].push_back(otKade);
+                if(otKoiKomponentE[otKade] != otKoiKomponentE[doKade]){
+                    int nomercheNaVtoriq = otKoiKomponentE[doKade];
+                    for(int j = 1; j <= broiGradove; j++){
+                        if(otKoiKomponentE[j] == nomercheNaVtoriq){
+                            otKoiKomponentE[j] = otKoiKomponentE[otKade];
+                        }
+                    }
+
+                    //otKoiKomponentE[korenNaDarvotoNa[doKade]] = otKoiKomponentE[korenNaDarvotoNa[otKade]];
+                }
+
+            }else{
+                for(int j = 0; j < (int)sasedstvo[otKade].size(); j++){
+                    if(sasedstvo[otKade][j] == doKade){
+                        sasedstvo[otKade][j] = 0;
+                    }
+
+                }
+            }
+        }
+    }
+
+    cout<<otgovor<<endl;
+
+    return 0;
+}

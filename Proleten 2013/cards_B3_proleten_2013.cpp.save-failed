@@ -1,0 +1,34 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int broiKarti;
+int karti[20];
+
+vector<int> parvaKupchinka;
+vector<int> vtoraKupchinka;
+
+int naiGolqmaSuma(int broiOstavashtiKarti){
+    if(broiOstavashtiKarti == 0 || (parvaKupchinka.size() == 0 && vtoraKupchinka.size() == 0)){
+        return 0;
+    }
+
+    int akoPremestimOt1Kam2;
+    int akoPremestimOt2Kam3;
+
+    if(parvaKupchinka.size() > 0){
+
+    }
+
+}
+
+int main(){
+    cin>>broiKarti;
+
+    for(int i = 0; i < broiKarti; i++){
+        cin>>karti[i];
+        parvaKupchinka.push_back(karti[i]);
+    }
+
+    return 0;
+}

@@ -1,0 +1,39 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+struct DanniZaZavod{
+    int vremeZaSvarshvane;
+    int vremeZaObrabotkaNaEdinPredmetOtTazi;
+    DanniZaZavod(int vremeZaSvarshvane, int vremeZaObrabotkaNaEdinPredmetOtTazi)
+        : vremeZaSvarshvane(vremeZaSvarshvane), vremeZaObrabotkaNaEdinPredmetOtTazi(vremeZaObrabotkaNaEdinPredmetOtTazi)
+    {
+    }
+};
+
+int broiFabriki;
+int broiElementi;
+
+DanniZaZavod zavodi[100010];
+
+struct poMalkoLiE
+    (DanniZaZavod a, DanniZaZavod b){
+    return a.vremeZaSvarshvane < b.vremeZaSvarshvane;
+}
+
+
+int main(){
+    cin>>broiFabriki>>broiElementi;
+
+    for(int i = 0; i < broiFabriki; i++){
+        int startovoZabavqne;
+        int vremeZaPraveneOtTaziFabrika;
+        cin>>startovoZabavqne>>vremeZaPraveneOtTaziFabrika;
+        DanniZaZavod zaDob = {startovoZabavqne, vremeZaPraveneOtTaziFabrika};
+        q.push(zaDob);
+    }
+
+
+
+    return 0;
+}

@@ -1,0 +1,42 @@
+ReadInt
+Copy IN B
+Store 1 C
+ReadChar
+If IN Is =
+    Copy B A
+    Stop
+EndIf
+Repeat
+    If IN Is =
+        If C is 1
+	    Add B A
+        EndIf
+	If C is 2
+ 	    Sub B A
+	EndIf
+	Stop
+    EndIf
+    If IN Is +
+	If C is 1
+	    Add B A
+        EndIf
+	If C is 2
+ 	    Sub B A
+	EndIf
+	Store 1 B
+	Store 1 C
+    EndIf
+    If IN Is -
+	If C is 1
+	    Add B A
+        EndIf
+	If C is 2
+ 	    Sub B A
+	EndIf
+	Store 1 B
+	Store 2 C
+    EndIf
+    ReadInt
+    Mul IN B
+    ReadChar
+Loop

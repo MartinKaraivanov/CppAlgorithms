@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+
+unsigned long long n;
+unsigned long long m;
+
+unsigned long long smqtaneNaStepeniteIVrashtane(unsigned long long stepen){
+    unsigned long long s = 1;
+
+    for(unsigned long long i = 0; i < stepen; i++){
+        s *= 2;
+        s %= m;
+    }
+
+    s *= 3;
+    s %= m;
+
+    return s;
+}
+
+int main(){
+    cin>>n>>m;
+
+    unsigned long long s = smqtaneNaStepeniteIVrashtane(n);
+
+    unsigned long long nNaVtora = n*n;
+    nNaVtora %= m;
+
+    s += m;
+    s -= nNaVtora;
+    s %= m;
+
+    unsigned long long triN = 3*n;
+    triN %= m;
+
+    s += m;
+    s -= triN;
+
+    s %= m;
+
+    s += m;
+    s -= 5;
+    s %= m;
+
+    cout<<s<<endl;
+
+    return 0;
+}
