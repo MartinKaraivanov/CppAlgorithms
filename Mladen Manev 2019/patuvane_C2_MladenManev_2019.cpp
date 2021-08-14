@@ -15,6 +15,18 @@ int momentNaIzlizane[100010];
 
 int bashta[100010];
 
+void prenastrovashtoDfs(int segashen, int otKadeIdvame){
+
+    for(int i = 0; i < (int)sasedstvo[segashen].size(); i++){
+        if(sasedstvo[segashen][i] != otKadeIdvame){
+            prenastrovashtoDfs(sasedstvo[segashen][i], segashen);
+        }else{
+            swap(sasedstvo[segashen][i], sasedstvo[segashen][0]);
+        }
+    }
+
+}
+
 void dfs(int segashen, int otKadIdvame){
     bashta[segashen] = otKadIdvame;
 
@@ -54,6 +66,7 @@ int main(){
         sasedstvo[doKade].push_back(otKade);
     }
 
+    prenastrovashtoDfs(1, -1);
     dfs(1, -1);
 
     for(int i = 0; i < broiPitaniq; i++){
@@ -70,15 +83,27 @@ int main(){
         }else{
             if(momentNaVlizane[otKade] < momentNaVlizane[doKade]){
                 int lqvKrai = 0;
+
+                if(bashta[otKade] != -1){
+                    lqvKrai = 1;
+                }
+
                 int desenKrai = sasedstvo[otKade].size() - 1;
 
                 while(lqvKrai < desenKrai){
                     int sredata = (lqvKrai + desenKrai)/2;
 
+                    if(momentNaIzlizane[sasedstvo[otKade][sredata]] <= momentNaVlizane[doKade]){
+                        lqvKrai = sredata + 1;
+                    }else{
+                        desenKrai = sredata;
+                    }
 
                 }
 
-                for(int j = 0; j < (int)sasedstvo[otKade].size(); j++){
+                otgovori[i] = sasedstvo[otKade][lqvKrai];
+
+                /*for(int j = 0; j < (int)sasedstvo[otKade].size(); j++){
                     int tekusht = sasedstvo[otKade][j];
                     if(momentNaVlizane[tekusht] < momentNaVlizane[doKade] &&
                         momentNaIzlizane[tekusht] > momentNaIzlizane[doKade] &&
@@ -88,7 +113,7 @@ int main(){
                         otgovori[i] = tekusht;
                         break;
                     }
-                }
+                }*/
 
                 if(otgovori[i] == 0){
                     otgovori[i] = doKade;
