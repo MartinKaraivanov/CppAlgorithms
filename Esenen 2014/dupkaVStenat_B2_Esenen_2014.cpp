@@ -1,25 +1,34 @@
 #include<iostream>
+#include<stdio.h>
 using namespace std;
 
 int strana;
 
-int koqTuhlaETuka[1010][1010];
+int koqTuhlaETuka[1008][1008];
 
-int koiNomerEOtgore[1010][1010];
-int koiNomerEOtlqvo[1010][1010];
+int koiNomerEOtgore[1008][1008];
+int koiNomerEOtlqvo[1008][1008];
 
 int nomerche = 1;
 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+int posledniqXNaKoitoImaDupka[1008][1008];
+int posledniqYNaKoitoImaDupka[1008][1008];
 
-    cin>>strana;
+int parviqXNaKoitoImaDupkaSled[1008][1008];
+int parviqYNaKoitoImaDupkaSled[1008][1008];
+
+int main(){
+    /*ios_base::sync_with_stdio(false);
+    cin.tie(NULL);*/
+
+    //cin>>strana;
+
+    scanf("%i", &strana);
 
     for(int y = 1; y <= strana; y++){
         for(int x = 1; x <= strana; x++){
-            cin>>koqTuhlaETuka[y][x];
+            //cin>>koqTuhlaETuka[y][x];
+            scanf("%i", &koqTuhlaETuka[y][x]);
         }
     }
 
@@ -54,65 +63,68 @@ int main(){
 
     //cout<<endl<<endl;
 
+    for(int y = 1; y < strana; y++){
+        for(int x = 1; x < strana; x++){
+            if(koqTuhlaETuka[y][x] == koqTuhlaETuka[y - 1][x]){
+                posledniqXNaKoitoImaDupka[y][x] = x;
+            }else{
+                posledniqXNaKoitoImaDupka[y][x] = posledniqXNaKoitoImaDupka[y][x - 1];
+            }
+        }
+    }
+
+    for(int x = 1; x < strana; x++){
+        for(int y = 1; y < strana; y++){
+            if(koqTuhlaETuka[y][x] == koqTuhlaETuka[y][x - 1]){
+                posledniqYNaKoitoImaDupka[y][x] = y;
+            }else{
+                posledniqYNaKoitoImaDupka[y][x] = posledniqYNaKoitoImaDupka[y - 1][x];
+            }
+        }
+    }
+
+    for(int y = strana - 1; y >= 0; y--){
+        for(int x = strana - 1; x >= 0; x--){
+            if(koqTuhlaETuka[y][x] == koqTuhlaETuka[y + 1][x]){
+                parviqXNaKoitoImaDupkaSled[y][x] = x;
+            }else{
+                parviqXNaKoitoImaDupkaSled[y][x] = parviqXNaKoitoImaDupkaSled[y][x + 1];
+            }
+            if(parviqXNaKoitoImaDupkaSled[y][x] == 0){
+                parviqXNaKoitoImaDupkaSled[y][x] = strana - 2;
+            }
+        }
+    }
+
+    for(int x = strana - 1; x >= 0; x--){
+        for(int y = strana; y >= 0; y--){
+            if(koqTuhlaETuka[y][x] == koqTuhlaETuka[y][x + 1]){
+                parviqYNaKoitoImaDupkaSled[y][x] = y;
+            }else{
+                parviqYNaKoitoImaDupkaSled[y][x] = parviqYNaKoitoImaDupkaSled[y + 1][x];
+            }
+            if(parviqYNaKoitoImaDupkaSled[y][x] == 0){
+                parviqYNaKoitoImaDupkaSled[y][x] = strana - 2;
+            }
+        }
+    }
+
     int naiGolqmoLice = 0;
     int otKadeX = -1;
     int otKadeY = -1;
     int doKadeX = -1;
     int doKadeY = -1;
 
-    /*for(int gorenY = 2; gorenY < strana; gorenY++){
-        for(int gorenX = 2; gorenX < strana; gorenX++){
-            for(int dolenY = gorenY; dolenY < strana; dolenY++){
-                for(int dolenX = gorenX; dolenX < strana; dolenX++){
-                    /*cout<<gorenY<<" "<<gorenX<<" "<<dolenY<<" "<<dolenX<<endl;
-                    cout<<koiNomerEOtgore[gorenY][gorenX]<<" "<<koiNomerEOtgore[gorenY][dolenX]<<" ";
-                    cout<<koiNomerEOtgore[dolenY + 1][gorenX]<<" "<<koiNomerEOtgore[dolenY + 1][dolenX]<<endl;
-                    cout<<koiNomerEOtlqvo[gorenY][gorenX]<<" "<<koiNomerEOtlqvo[dolenY][gorenX]<<" ";
-                    cout<<koiNomerEOtlqvo[gorenY][dolenX + 1]<<" "<<koiNomerEOtlqvo[dolenY][dolenX + 1]<<endl;
-                    cout<<endl;
-
-                    bool stavaLi = true;
-
-                    //cout<<koiNomerEOtgore[gorenX][dolenY + 1]<<" "<<koiNomerEOtgore[dolenX][dolenY + 1]<<endl<<endl;
-
-                    if((koiNomerEOtgore[gorenY][gorenX] != koiNomerEOtgore[gorenY][dolenX]) ||
-                        (koiNomerEOtgore[dolenY + 1][gorenX] != koiNomerEOtgore[dolenY + 1][dolenX]) ||
-                        (koiNomerEOtlqvo[gorenY][gorenX] != koiNomerEOtlqvo[dolenY][gorenX]) ||
-                        (koiNomerEOtlqvo[gorenY][dolenX + 1] != koiNomerEOtlqvo[dolenY][dolenX + 1]) ||
-                        (koiNomerEOtgore[gorenY][gorenX] == 0) ||
-                        (koiNomerEOtgore[dolenY + 1][dolenX] == 0) ||
-                        (koiNomerEOtlqvo[gorenY][gorenX] == 0) ||
-                        (koiNomerEOtlqvo[dolenY][dolenX + 1] == 0))
-                    {
-                        stavaLi = false;
-                    }
-
-                    if(stavaLi == true){
-                        /*cout<<"tova stava"<<endl;
-                        cout<<koqTuhlaETuka[gorenY][dolenX]<<" "<<koqTuhlaETuka[gorenY][dolenX + 1]<<" ";
-                        cout<<koiNomerEOtlqvo[gorenY][dolenX + 1]<<endl;
-                        cout<<koqTuhlaETuka[dolenY][dolenX]<<" "<<koqTuhlaETuka[dolenY][dolenX + 1]<<" ";
-                        cout<<koiNomerEOtlqvo[dolenY][dolenX + 1]<<endl<<endl;
-
-                        int segLice = (dolenY - gorenY + 1)*(dolenX - gorenX + 1);
-                        if(segLice > naiGolqmoLice){
-                            naiGolqmoLice = segLice;
-                            otKadeX = gorenX;
-                            otKadeY = gorenY;
-                            doKadeX = dolenX;
-                            doKadeY = dolenY;
-                        }
-                    }
-
-                }
-            }
-        }
-    }*/
-
     for(int gorenRed = 2; gorenRed < strana; gorenRed++){
-        for(int dolenRed = gorenRed + 1; dolenRed <= strana; dolenRed++){
+        for(int dolenRed = strana; dolenRed >= gorenRed; dolenRed--){
+
+            if((dolenRed - gorenRed + 1)*strana <= naiGolqmoLice){
+                break;
+            }
+
             int broiPodred = 0;
             int otKoqKolonaEPochnalo = 2;
+
             for(int kolona = 2; kolona < strana; kolona++){
                 int gorenY = gorenRed;
                 int gorenX = otKoqKolonaEPochnalo;
@@ -148,8 +160,9 @@ int main(){
         }
     }
 
+    printf("%i %i %i %i %i \n", naiGolqmoLice, otKadeY, otKadeX, doKadeY, doKadeX);
 
-    cout<<naiGolqmoLice<<" "<<otKadeY<<" "<<otKadeX<<" "<<doKadeY<<" "<<doKadeX<<endl;
+    //cout<<naiGolqmoLice<<" "<<otKadeY<<" "<<otKadeX<<" "<<doKadeY<<" "<<doKadeX<<endl;
 
     return 0;
 }

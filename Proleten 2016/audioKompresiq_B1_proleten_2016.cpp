@@ -1,4 +1,5 @@
 #include<iostream>
+#include<stdio.h>
 using namespace std;
 
 int broiOtcheti;
@@ -79,13 +80,20 @@ void sCycli(){
 }
 
 int main(){
-    cin>>broiOtcheti;
+
+    //ios_base::sync_with_stdio(false);
+    //cin.tie(NULL);
+
+    //cin>>broiOtcheti;
+
+    scanf("%i", &broiOtcheti);
 
     int predno = 0;
 
     for(int i = 1; i <= broiOtcheti; i++){
         int segashno;
-        cin>>segashno;
+        //cin>>segashno;
+        scanf("%i", &segashno);
         int segashnaDelta = segashno - predno;
         predno = segashno;
         nuzhenBroiZaPredstavqneNaTova[i] = broiNuzhniCifriZaPredstavqne(segashnaDelta);
@@ -102,7 +110,8 @@ int main(){
         naiMalkotoImpulsi = min(naiMalkotoImpulsi, zaTuk);
     }
 
-    cout<<naiMalkotoImpulsi<<endl;
+    //cout<<naiMalkotoImpulsi<<endl;
+    printf("%i \n", naiMalkotoImpulsi);
 
     return 0;
 }

@@ -1,12 +1,19 @@
 #include<iostream>
 #include<vector>
 #include<map>
-#include<unordered_map>
 using namespace std;
 
-struct Darvo{
+
+typedef pair<int, int> TValue;
+    // first -> koiVrah;
+    // second -> kakvo; /// 1 - vlizane; 2 - izlizane
+
+
+
+
+struct AvlPosDarvo{
     private: struct DanniZaVarha{
-        int stoinost;
+        TValue stoinost;
         int lqvoDete;
         int dqsnoDete;
         int broiVNegovotoPoddarvo;
@@ -18,9 +25,9 @@ struct Darvo{
 
     private: int korenNomer = -1;
 
-    private: unordered_map<int, int> koiVavVectoraE;
+    private: map<TValue, int> koiVavVectoraE;
 
-    private: int daiNovVrah(int stoinost){
+    private: int daiNovVrah(TValue stoinost){
         varhove.push_back({stoinost, -1, -1, 1, 1, -1});
         koiVavVectoraE[stoinost] = varhove.size() - 1;
         return varhove.size() - 1;
@@ -148,11 +155,11 @@ struct Darvo{
         return segashenVrah;
     }
 
-    public: int kakvoImaNaPoziciq(int poziciq){
+    public: TValue kakvoImaNaPoziciq(int poziciq){
         int segashenNomer = korenNomer;
 
         bool imaLiGo = false;
-        int kakvoE = -1;
+        TValue kakvoE = {-1, -1};
 
         while(segashenNomer == -1){
             if(kolkoImaTuka(varhove[segashenNomer].lqvoDete) == poziciq){
@@ -171,13 +178,13 @@ struct Darvo{
         }
 
         if(imaLiGo == false){
-            return 0;
+            return {-1, -1};
         }
 
         return kakvoE;
     }
 
-    private: int smqnaNa(int segashenNomer, int poziciq, int novaStoinost){
+    private: int smqnaNa(int segashenNomer, int poziciq, TValue novaStoinost){
         if(segashenNomer == -1){
             return -1;
         }
@@ -201,16 +208,15 @@ struct Darvo{
         return segashenNomer;
     }
 
-    public: void promeniNaPoziciq(int poziciq, int novaStoinost){
-        int staraStoinost = kakvoImaNaPoziciq(poziciq);
+    public: void promeniNaPoziciq(int poziciq, TValue novaStoinost){
+        TValue staraStoinost = kakvoImaNaPoziciq(poziciq);
         koiVavVectoraE[novaStoinost] = koiVavVectoraE[staraStoinost];
-        koiVavVectoraE[staraStoinost] = -1;
-        //koiVavVectoraE.erase(staraStoinost);
+        koiVavVectoraE.erase(staraStoinost);
         korenNomer = smqnaNa(korenNomer, poziciq, novaStoinost);
     }
 
 
-    private: int dobaviVrah(int segashenVrah, int poziciq, int stoinost){
+    private: int dobaviVrah(int segashenVrah, int poziciq, TValue stoinost){
         if(segashenVrah == -1){
             return daiNovVrah(stoinost);
         }
@@ -230,7 +236,7 @@ struct Darvo{
         return balansirai(segashenVrah);
     }
 
-    public: void dobavi(int kade, int stoinost){
+    public: void dobavi(int kade, TValue stoinost){
         korenNomer = dobaviVrah(korenNomer, kade, stoinost);
     }
 
@@ -294,9 +300,8 @@ struct Darvo{
     }
 
     public: void mahni(int kade){
-        int stoinostta = kakvoImaNaPoziciq(kade);
-        //koiVavVectoraE.erase(stoinostta);
-        koiVavVectoraE[stoinostta] = -1;
+        TValue stoinostta = kakvoImaNaPoziciq(kade);
+        koiVavVectoraE.erase(stoinostta);
         korenNomer = premahniVrah(korenNomer, kade).novVrah;
     }
 
@@ -320,8 +325,8 @@ struct Darvo{
         return poziciq;
     }
 
-    public: int naKoqPoziciqE(int koi){
-        if(koiVavVectoraE.find(koi) == koiVavVectoraE.end() || koiVavVectoraE[koi] == -1){
+    public: int naKoqPoziciqE(TValue koi){
+        if(koiVavVectoraE.find(koi) == koiVavVectoraE.end()){
             return -1;
         }
         return toziNaKoqPoziciqE(koiVavVectoraE[koi]);
@@ -334,7 +339,7 @@ struct Darvo{
 
         return varhove[korenNomer].broiVNegovotoPoddarvo;
     }
-
+/*
     private: void darvovidnoPechatane(int vrah){
         if(vrah == -1){
             return ;
@@ -376,67 +381,78 @@ struct Darvo{
     public: void pechataneSDfs(){
         dfsPechataneHubavo(korenNomer);
     }
-
+*/
 };
 
-int main(){
-    int broiVarhove;
-    cin>>broiVarhove;
+//int bashta[500010];
 
-    struct Darvo darvoto;
+int nomerche;
 
-    for(int i = 0; i < broiVarhove; i++){
-        int koqPoziciq;
-        int tuka;
-        cin>>koqPoziciq>>tuka;
 
-        darvoto.dobavi(koqPoziciq, tuka);
-
-        darvoto.otpechatvaneKatoDarvo();
-        darvoto.pechataneSDfs();
-        cout<<endl;
-
-        cout<<"dobavih "<<tuka<<endl<<endl;
+AvlPosDarvo momenti;
+/*
+bool sreshtameLiGo(int segashenVrah, int koiTarsim){
+    if(segashenVrah == koiTarsim){
+        return true;
     }
 
-    cout<<"ok"<<endl;
-
-    darvoto.otpechatvaneKatoDarvo();
-
-    while(true){
-        int chislo;
-
-        cin>>chislo;
-
-        int kade;
-
-        cin>>kade;
-
-        if(chislo == 0){
-            break;
-        }
-
-        if(chislo == 1){
-            int kakvo;
-            cin>>kakvo;
-            darvoto.dobavi(kade, kakvo);
-        }
-        if(chislo == 2){
-            darvoto.mahni(kade);
-        }
-        if(chislo == 3){
-            int novaSt;
-            cin>>novaSt;
-            darvoto.promeniNaPoziciq(kade, novaSt);
-        }
-        if(chislo == 4){
-            cout<<darvoto.naKoqPoziciqE(kade)<<endl;
-        }
-
-        darvoto.otpechatvaneKatoDarvo();
-        darvoto.pechataneSDfs();
-        cout<<endl;
+    if(segashenVrah == 0){
+        return false;
     }
 
-    return 0;
+    return sreshtameLiGo(bashta[segashenVrah], koiTarsim);
+}
+*/
+int vKoiMomentETova(int koiVrah, int kakvo){
+    return momenti.naKoqPoziciqE({koiVrah, kakvo});
+}
+
+void init(){
+    //momenti.push_back({0, 1});
+    //momenti.push_back({0, 2});
+    momenti.dobavi(0, {0, 1});
+    momenti.dobavi(1, {0, 2});
+}
+
+void add_leaf(int parent){
+    nomerche++;
+    //bashta[nomerche] = parent;
+
+
+    int kadeERoditelq = vKoiMomentETova(parent, 2);
+    //momenti.insert(momenti.begin() + kadeERoditelq, {nomerche, 1});
+    //momenti.insert(momenti.begin() + kadeERoditelq + 1, {nomerche, 2});
+    momenti.dobavi(kadeERoditelq, {nomerche, 1});
+    momenti.dobavi(kadeERoditelq + 1, {nomerche, 2});
+}
+
+
+void add_above(int node){
+    nomerche++;
+
+    //bashta[nomerche] = bashta[node];
+    //bashta[node] = nomerche;
+
+    int kadeVlizaDolniq = vKoiMomentETova(node, 1);
+    //momenti.insert(momenti.begin() + kadeVlizaDolniq, {nomerche, 1});
+    momenti.dobavi(kadeVlizaDolniq, {nomerche, 1});
+    int kadeIzlizaDolniq = vKoiMomentETova(node, 2);
+    //momenti.insert(momenti.begin() + kadeIzlizaDolniq + 1, {nomerche, 2});
+    momenti.dobavi(kadeIzlizaDolniq + 1, {nomerche, 2});
+}
+
+
+bool is_par(int x, int y){
+    int vlizaneX = vKoiMomentETova(x, 1);
+    int izlizaneX = vKoiMomentETova(x, 2);
+    int vlizaneY = vKoiMomentETova(y, 1);
+    int izlizaneY = vKoiMomentETova(y, 2);
+
+    if(vlizaneX < vlizaneY && izlizaneX > izlizaneY){
+        return true;
+    }else{
+        return false;
+    }
+
+    //return sreshtameLiGo(bashta[y], x);
 }
