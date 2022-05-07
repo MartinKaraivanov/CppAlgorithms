@@ -1,94 +1,97 @@
 #include<iostream>
 using namespace std;
 
-int daljinaNaRedicata;
-int broiPrilaganiq;
+long long daljinaNaRedicata;
+long long broiPrilaganiq;
 
-int prilaganiq[30010];
+long long prilaganiq[30010];
 
 void privediVDrugoto(){
 
-    int novataRedichka[30010];
+    long long novataRedichka[30010];
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         novataRedichka[prilaganiq[i]] = i + 1;
     }
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         prilaganiq[i] = novataRedichka[i] - 1;
     }
 
 }
 
-void umnoji(int (&redica)[30010], int sKoq[30010]){
+void umnoji(long long (&redica)[30010], long long sKoq[30010]){
 
-    int novaRedica[30010];
+    long long novaRedica[30010];
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         novaRedica[i] = redica[sKoq[i]];
     }
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         redica[i] = novaRedica[i];
     }
 
 }
 
-void vdiganeNaStepen(int (&koe)[30010], int naKoqStepen){
-    int zaVrashtane[30010];
-    int smetnato[30010];
+void vdiganeNaStepen(long long (&koe)[30010], long long naKoqStepen){
+    long long zaVrashtane[30010];
+    long long smetnato[30010];
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         zaVrashtane[i] = koe[i];
         smetnato[i] = koe[i];
     }
 
-    int kopieStepen = naKoqStepen;
+    long long kopieStepen = naKoqStepen;
+
+    //cout<<"she digame na "<<kopieStepen<<" stepen"<<endl;
 
     while(kopieStepen > 0){
+        //cout<<"kopiestepen e "<<kopieStepen<<endl;
         if((kopieStepen & 1) == 1){
+            //cout<<"sega sme na cifra koqto e 1 i umnojavame zavrahstane"<<endl;
             umnoji(zaVrashtane, smetnato);
+
+            /*cout<<"sega vrashtaneto e "<<endl;
+
+            for(long long i = 0; i < daljinaNaRedicata; i++){
+                cout<<zaVrashtane[i]<<" ";
+            }
+            cout<<endl;*/
         }
 
         umnoji(smetnato, smetnato);
 
-        cout<<"sega vrashtaneto e "<<endl;
-
-        for(int i = 0; i < daljinaNaRedicata; i++){
-            cout<<zaVrashtane[i]<<" ";
-        }
-        cout<<endl;
-
         kopieStepen >>= 1;
     }
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         koe[i] = zaVrashtane[i];
     }
 
 }
 
-
 int main(){
 
     cin>>daljinaNaRedicata>>broiPrilaganiq;
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         cin>>prilaganiq[i];
         prilaganiq[i]--;
     }
 
     privediVDrugoto();
 
-    cout<<"sega nachalnoto e "<<endl;
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    /*cout<<"sega nachalnoto e "<<endl;
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         cout<<prilaganiq[i]<<" ";
     }
-    cout<<endl;
+    cout<<endl;*/
 
-    vdiganeNaStepen(prilaganiq, broiPrilaganiq);
+    vdiganeNaStepen(prilaganiq, broiPrilaganiq-1);
 
-    for(int i = 0; i < daljinaNaRedicata; i++){
+    for(long long i = 0; i < daljinaNaRedicata; i++){
         cout<<prilaganiq[i] + 1<<" ";
     }
     cout<<endl;

@@ -239,17 +239,17 @@ int query(){
     return varhove[korenNomer].maxVIntervalaMu;
 }
 
-(int, int) queryMaxAll()
+//(int, int) queryMaxAll()
 
-(int, int) queryMax(ot, do)
+//(int, int) queryMax(ot, do)
 
-int queryKolko(kade)
+//int queryKolko(kade)
 
-int QuerySuma(ot, do)
+//int QuerySuma(ot, do)
 
 
-int querySuma(int korenPoddarvoNomer, int kadeKolkoE){
-    if(korenPoddarvoNomer == -1 || kadeKolkoE < varhove[korenPoddarvoNomer].otKadeObhvashta || kadeKolkoE > varhove[korenPoddarvoNomer].doKoiIndexObhvashta){
+/*int querySuma(int korenPoddarvoNomer, int kadeKolkoE){
+    if(korenPoddarvoNomer == -1 || kadeKolkoE < varhove[korenPoddarvoNomer].otKadeObhvashta || kadeKolkoE > varhove[korenPoddarvoNomer].doKadeObhvashta){
         return 0;
     }
 
@@ -263,7 +263,7 @@ int querySuma(int korenPoddarvoNomer, int kadeKolkoE){
     zaTuka += querySuma(varhove[korenPoddarvoNomer].dqsnoDeteNomer);
 
     return zaTuka;
-}
+}*/
 
 int main(){
     ios_base::sync_with_stdio(false);

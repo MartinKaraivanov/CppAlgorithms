@@ -11,137 +11,89 @@ vector<int> sasedstvo[50010];
 
 int broiPutiPreminatoPrezNego[50010];
 
-int dalbochina[50010];
-vector<int> pow2ancestors[50010];
-
-
-bool visited[50010];
-
 int broiPutiToziELCA[50010];
 int broiPutiToziENachalen[50010];
 
-void dfsZaNamiraneNaDalbochinaIParents(int segashen, int otKadeIdvame, int dalb){
-    dalbochina[segashen] = dalb;
-    pow2ancestors[segashen].push_back(segashen);
-    if(otKadeIdvame != -1){
-        pow2ancestors[segashen].push_back(otKadeIdvame);
-    }
+int dalbochina[50010];
+bool visited[50010];
+int parvoPoseshtenie[50010];
 
-    for(unsigned int i = 0; i < sasedstvo[segashen].size(); i++){
-        if(sasedstvo[segashen][i] != otKadeIdvame){
-            dfsZaNamiraneNaDalbochinaIParents(sasedstvo[segashen][i], segashen, dalb + 1);
+vector<int> eulerovoPoseshtenie;
+
+int darvo[500010];
+
+void dfs(int segashenVrah, int dalb){
+    visited[segashenVrah] = true;
+    dalbochina[segashenVrah] = dalb;
+    parvoPoseshtenie[segashenVrah] = eulerovoPoseshtenie.size();
+    eulerovoPoseshtenie.push_back(segashenVrah);
+
+    for(int i = 0; i < (int)sasedstvo[segashenVrah].size(); i++){
+        int sledvasht = sasedstvo[segashenVrah][i];
+        if(visited[sledvasht] == false){
+            dfs(sledvasht, dalb + 1);
+            eulerovoPoseshtenie.push_back(segashenVrah);
         }
     }
 }
 
-void praveneNaDrugiteAncestori(){
-    bool pravimLiNeshto = true;
+void postroiDarvoto(int segashenVrah, int otKade, int doKade){
+    if(otKade == doKade){
+        darvo[segashenVrah] = eulerovoPoseshtenie[otKade];
+        return ;
+    }
 
-    for(int pow2rastoqnie = 2; pravimLiNeshto == true; pow2rastoqnie++){
-        pravimLiNeshto = false;
-        for(int grad = 1; grad <= broiGradove; grad++){
-            if(pow2ancestors[grad].size() > pow2rastoqnie-1){
-                int mnogoPradqdo = pow2ancestors[grad][pow2rastoqnie - 1];
-                if(mnogoPradqdo != -1 && pow2ancestors[mnogoPradqdo].size() > pow2rastoqnie - 1){
-                    pow2ancestors[grad].push_back(pow2ancestors[mnogoPradqdo][pow2rastoqnie - 1]);
-                    pravimLiNeshto = true;
-                }
-            }
-        }
+    int sredata = (otKade + doKade)/2;
+
+    postroiDarvoto(segashenVrah*2, otKade, sredata);
+    postroiDarvoto(segashenVrah*2 + 1, sredata + 1, doKade);
+
+    int lqvo = darvo[segashenVrah*2];
+    int dqsno = darvo[segashenVrah*2 + 1];
+
+    if(dalbochina[lqvo] < dalbochina[dqsno]){
+        darvo[segashenVrah] = lqvo;
+    }else{
+        darvo[segashenVrah] = dqsno;
     }
 }
 
-/*
-void dfsSasStack(int start){
-    stack<int> s;
-
-    s.push(start);
-    parents[start] = -1;
-    dalbochina[start] = 1;
-
-    while(s.empty() == false){
-        int naiOtgore = s.top();
-        s.pop();
-
-        if(visited[naiOtgore] == true){
-            continue;
-        }
-        visited[naiOtgore] = true;
-
-        for(unsigned int i = 0; i < sasedstvo[naiOtgore].size(); i++){
-            if(visited[sasedstvo[naiOtgore][i]] == false){
-                parents[sasedstvo[naiOtgore][i]] = naiOtgore;
-                dalbochina[sasedstvo[naiOtgore][i]] = dalbochina[naiOtgore] + 1;
-                s.push(sasedstvo[naiOtgore][i]);
-            }
-        }
-
+int query(int segashenVrah, int otKadeObhv, int doKadeObhv, int otKadeUpdate, int doKadeUpdate){
+    if(otKadeObhv > doKadeUpdate || doKadeObhv < otKadeUpdate){
+        return -1;
+    }
+    if(otKadeObhv >= otKadeUpdate && doKadeObhv <= doKadeUpdate){
+        return darvo[segashenVrah];
     }
 
-}
+    int sredata = (otKadeObhv + doKadeObhv)/2;
 
-void bfs(int start){
-    queue<int> q;
+    int lqvo = query(segashenVrah*2, otKadeObhv, sredata, otKadeUpdate, doKadeUpdate);
+    int dqsno = query(segashenVrah*2 + 1, sredata + 1, doKadeObhv, otKadeUpdate, doKadeUpdate);
 
-    q.push(start);
-    parents[start] = -1;
-    dalbochina[start] = 1;
-
-    while(q.empty() == false){
-        int naiOtgore = q.front();
-        q.pop();
-
-        if(visited[naiOtgore] == true){
-            continue;
-        }
-        visited[naiOtgore] = true;
-
-        for(unsigned int i = 0; i < sasedstvo[naiOtgore].size(); i++){
-            if(visited[sasedstvo[naiOtgore][i]] == false){
-                parents[sasedstvo[naiOtgore][i]] = naiOtgore;
-                dalbochina[sasedstvo[naiOtgore][i]] = dalbochina[naiOtgore] + 1;
-                q.push(sasedstvo[naiOtgore][i]);
-            }
-        }
+    if(lqvo == -1){
+        return dqsno;
+    }
+    if(dqsno == -1){
+        return lqvo;
     }
 
+    if(dalbochina[lqvo] < dalbochina[dqsno]){
+        return lqvo;
+    }
+    return dqsno;
 }
-*/
+
 int lca(int naParvi, int naVtori){
-    int segashnoOtKade = naParvi;
-    int segashnoDoKade = naVtori;
 
-    if(dalbochina[segashnoOtKade] < dalbochina[segashnoDoKade]){
-        swap(segashnoOtKade, segashnoDoKade);
+    int lqvo = parvoPoseshtenie[naParvi];
+    int dqsno = parvoPoseshtenie[naVtori];
+
+    if(lqvo > dqsno){
+        swap(lqvo, dqsno);
     }
 
-    int razlikaVNivata = dalbochina[segashnoOtKade] - dalbochina[segashnoDoKade];
-
-    for(int i = 1; razlikaVNivata > 0; i++){
-        if(razlikaVNivata % 2 == 1){
-            segashnoOtKade = pow2ancestors[segashnoOtKade][i];
-        }
-        razlikaVNivata /= 2;
-    }
-
-    if(segashnoOtKade == segashnoDoKade){
-        return segashnoOtKade;
-    }
-
-    int i = pow2ancestors[segashnoOtKade].size() - 1;
-    while(i > 0){
-        if(pow2ancestors[segashnoOtKade][i] != pow2ancestors[segashnoDoKade][i]){
-            segashnoOtKade = pow2ancestors[segashnoOtKade][i];
-            segashnoDoKade = pow2ancestors[segashnoDoKade][i];
-            i = min((int)pow2ancestors[segashnoOtKade].size() - 1, i - 1);
-        }else{
-            i--;
-        }
-    }
-
-    int lowestCommonAncestor = pow2ancestors[segashnoOtKade][1];
-
-    return lowestCommonAncestor;
+    return query(1, 0, eulerovoPoseshtenie.size(), lqvo, dqsno);
 }
 
 int dfsZaNamiraneNaBroqVKoitoUchastva(int segashen, int otKadeIdvame){
@@ -178,10 +130,8 @@ int main(){
         sasedstvo[doKade].push_back(otKade);
     }
 
-    dfsZaNamiraneNaDalbochinaIParents(1, -1, 1);
-    praveneNaDrugiteAncestori();
-    //dfsSasStack(1);
-    //bfs(1);
+    dfs(1, 0);
+    postroiDarvoto(1, 0, eulerovoPoseshtenie.size() - 1);
 
     for(int i = 0; i < broiEkskurzii; i++){
         int otKade;
@@ -190,6 +140,8 @@ int main(){
         cin>>otKade>>doKade;
 
         int lowestCANaTezi = lca(otKade, doKade);
+
+        //cout<<otKade<<" "<<doKade<<" "<<lowestCANaTezi<<endl;
 
         broiPutiToziELCA[lowestCANaTezi]++;
         broiPutiToziENachalen[otKade]++;

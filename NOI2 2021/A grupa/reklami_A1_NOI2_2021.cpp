@@ -1,123 +1,67 @@
 #include<iostream>
-#include<map>
+#include<vector>
 using namespace std;
 
-struct DanniZaMinutata{
-    long long broiVlezli;
-    long long broiIzlezli;
-    long long broiHoraVlezliDo;
-    long long broiHoraIzlezliDo;
-    long long naiGolqmotoDo;
-    long long broiKoitoSheChuqtTogava;
+int broiHora;
+int daljinaReklama;
+
+struct DanniZaPoseshtenie{
+    int momentVlizane;
+    int momentIzlizane;
 };
 
-int broiHora;
-long long daljinaNaReklamata;
+DanniZaPoseshtenie hora[3000010];
 
-map<long long, DanniZaMinutata> minuti;
+int naiGolqmMoment = 0;
+int naiMalakMoment = 100000001;
 
-/*map<long long, long long> broiHoraVlezliDo;
-map<long long, long long> broiHoraIzlezliDo;
+struct DanniZaVarha{
+    int maximalno;
+    int lazyDelta;
+    int otKadeObhvashta;
+    int doKadeObhvashta;
+    int lqvoDete;
+    int dqsnoDete;
+};
 
-map<long long, long long> naiGolqmotoDo;
+vector<DanniZaVarha> varhove;
+int koreNomer = -1;
 
-map<long long, long long> broiKoitoSheChuqtTogava;*/
+int daiNovVrah(DanniZaVarha novVrah){
+    varhove.push_back(novVrah);
+    return varhove.size() - 1;
+}
 
-long long naiMalakMoment = 1000000000;
+int napraviDarvo(int otKade, int doKade){
+    if(otKade == doKade){
+        return daiNovVrah({0, 0, otKade, doKade, -1, -1});
+    }
+
+    int lqvoDete = napraviDarvo(otKade, (otKade + doKade)/2);
+    int dqsnoDete = napraviDarvo((otKade + doKade)/2 + 1, doKade);
+
+    return daiNovVrah({0, 0, otKade, doKade, lqvoDete, dqsnoDete});
+}
+
+
 
 int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
 
-    cin>>broiHora>>daljinaNaReklamata;
+    cin>>broiHora>>daljinaReklama;
 
     for(int i = 0; i < broiHora; i++){
-        long long kogaVliza;
-        long long kogaIzliza;
-
-        cin>>kogaVliza>>kogaIzliza;
-
-        if(kogaIzliza - kogaVliza >= daljinaNaReklamata){
-            minuti[kogaVliza].broiVlezli++;
-            minuti[kogaIzliza].broiIzlezli++;
-            naiMalakMoment = min(naiMalakMoment, kogaVliza);
-        }
+        cin>>hora[i].momentVlizane>>hora[i].momentIzlizane;
+        naiMalakMoment = min(naiMalakMoment, hora[i].momentVlizane);
+        naiGolqmMoment = max(naiGolqmMoment, hora[i].momentIzlizane);
     }
 
-    long long preden = 0;
+    koreNomer = napraviDarvo(naiMalakMoment, naiGolqmMoment);
 
-    for(map<long long, DanniZaMinutata>::iterator i = minuti.begin(); i != minuti.end(); i++){
-        long long segashen = i -> first;
-        DanniZaMinutata tuka = i -> second;
+    int nai
 
-        minuti[segashen].broiHoraVlezliDo = minuti[preden].broiHoraVlezliDo + tuka.broiVlezli;
-        minuti[segashen].broiHoraIzlezliDo = minuti[preden].broiHoraIzlezliDo + tuka.broiIzlezli;
+    for(int i = 0; i < broiHora; i++){
 
-        preden = segashen;
     }
-
-    /*for(map<long long, DanniZaMinutata>::iterator i = minuti.begin(); i != minuti.end(); i++){
-        cout<<i -> first<<" "<<broiHoraVlezliDo[i -> first]<<" "<<broiHoraIzlezliDo[i -> first]<<endl;
-    }*/
-
-    long long naiGolqmoto = 0;
-
-    for(map<long long, DanniZaMinutata>::iterator i = minuti.begin(); i != minuti.end(); i++){
-        long long segashen = i -> first;
-
-        auto proba = minuti.lower_bound(segashen + daljinaNaReklamata);
-
-        if(proba == minuti.end()){
-            break;
-        }
-
-        long long doKadeIzlezliHora = (*proba).first;
-
-        //cout<<i -> first<<" "<<doKadeIzlezliHora<<endl;
-
-        //cout<<broiHoraIzlezliDo[doKadeIzlezliHora] - minuti[doKadeIzlezliHora].broiIzlezli<<endl;
-
-        long long broiTuka =
-            minuti[segashen].broiHoraVlezliDo -
-                (minuti[doKadeIzlezliHora].broiHoraIzlezliDo - minuti[doKadeIzlezliHora].broiIzlezli);
-
-        naiGolqmoto = max(naiGolqmoto, broiTuka);
-        minuti[doKadeIzlezliHora].naiGolqmotoDo = naiGolqmoto;
-
-        minuti[segashen].broiKoitoSheChuqtTogava = broiTuka;
-        //cout<<"broi tuka: "<<broiTuka<<" nai golqm do tuka: "<<naiGolqmotoDo[i -> first]<<" sbor tuka: "<<sborTuka<<endl;
-    }
-
-    long long naiGolqmSbor = 0;
-
-    for(map<long long, DanniZaMinutata>::iterator i = minuti.begin(); i != minuti.end(); i++){
-        long long segashen = i -> first;
-
-        auto proba = minuti.lower_bound(segashen + daljinaNaReklamata);
-
-        if(proba == minuti.end()){
-            break;
-        }
-
-        long long doKadeIzlezliHora = (*proba).first;
-
-        //cout<<i -> first<<" "<<doKadeIzlezliHora<<endl;
-
-        //cout<<broiHoraIzlezliDo[doKadeIzlezliHora] - minuti[doKadeIzlezliHora].broiIzlezli<<endl;
-
-        long long broiTuka = minuti[segashen].broiKoitoSheChuqtTogava;
-
-        long long sborTuka = broiTuka + minuti[segashen].naiGolqmotoDo;
-        naiGolqmSbor = max(naiGolqmSbor, sborTuka);
-
-        if(doKadeIzlezliHora - segashen >= 2*daljinaNaReklamata){
-            naiGolqmSbor = max(naiGolqmSbor, 2*broiTuka);
-        }
-
-        //cout<<"broi tuka: "<<broiTuka<<" nai golqm do tuka: "<<naiGolqmotoDo[i -> first]<<" sbor tuka: "<<sborTuka<<endl;
-    }
-
-    cout<<naiGolqmSbor<<endl;
 
     return 0;
 }

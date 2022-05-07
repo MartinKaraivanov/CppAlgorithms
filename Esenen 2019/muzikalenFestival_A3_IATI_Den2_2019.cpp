@@ -1,6 +1,5 @@
 #include<iostream>
 #include<vector>
-#include<stack>
 using namespace std;
 
 int broiKoncerti;
@@ -11,88 +10,76 @@ struct DanniZaIzpalnenie{
     int krai;
 };
 
+int naiGolqmo;
+
 DanniZaIzpalnenie izpalneniq[200010];
 
-vector<int> sasedstvo[400010];
+struct DanniZaVrah{
+    int maximalno;
+    int lazyDelta;
+    int otKadeObhvashta;
+    int doKadeObhvashta;
+    int lqvoDete;
+    int dqsnoDete;
+};
 
-stack<int> s;
+vector<DanniZaVrah> varhove;
+int korenNomer = -1;
 
-bool visited[400010];
-bool reverseVisited[400010];
+int daiNovVrah(DanniZaVrah novVrah){
+    varhove.push_back(novVrah);
+    return varhove.size() - 1;
+}
 
-int whichSCC[400010];
-int sccCounter;
+int napraviDarvo(int otKade, int doKade){
+    if(otKade == doKade){
+        return daiNovVrah({0, 0, otKade, doKade, -1, -1});
+    }
 
-void dfs(int current){
-    if(visited[current] == true){
+    int lqvoDete = napraviDarvo(otKade, (otKade + doKade)/2);
+    int dqsnoDete = napraviDarvo((otKade + doKade)/2 + 1, doKade);
+
+    return daiNovVrah({0, 0, otKade, doKade, lqvoDete, dqsnoDete});
+}
+
+int maxaTam(int kade){
+    if(kade == -1){
+        return 0;
+    }
+
+    return varhove[kade].maximalno;
+}
+
+void update(int segashenVrah, int otKade, int doKade, int delta){
+
+    if(segashenVrah == -1 || otKade > varhove[segashenVrah].doKadeObhvashta || doKade < varhove[segashenVrah].otKadeObhvashta){
         return ;
     }
 
-    visited[current] = true;
+    if(otKade <= varhove[segashenVrah].otKadeObhvashta && doKade >= varhove[segashenVrah].doKadeObhvashta){
+        varhove[segashenVrah].maximalno += delta;
+        varhove[segashenVrah].lazyDelta += delta;
 
-    for(int i = 0; i < (int)sasedstvo[current].size(); i++){
-        if(visited[sasedstvo[current][i]] == false){
-            dfs(sasedstvo[current][i]);
-        }
-    }
-
-    s.push(current);
-}
-
-void reverseDfs(int current){
-    if(reverseVisited[current] == true){
         return ;
     }
 
-    cout<<"sega sme v "<<current<<" i she go slojim da e ot scc "<<sccCounter<<endl;
+    update(varhove[segashenVrah].lqvoDete, otKade, doKade, delta);
+    update(varhove[segashenVrah].dqsnoDete, otKade, doKade, delta);
 
-    reverseVisited[current] = true;
-
-    for(int i = 0; i < (int)sasedstvo[current].size(); i++){
-        if(reverseVisited[sasedstvo[current][i]] == false){
-            cout<<"sega ouskame ot "<<current<<" za "<<sasedstvo[current][i]<<endl;
-            reverseDfs(sasedstvo[current][i]);
-        }
-    }
-
-    whichSCC[current] = sccCounter;
+    varhove[segashenVrah].maximalno = max(maxaTam(varhove[segashenVrah].lqvoDete), maxaTam(varhove[segashenVrah].dqsnoDete)) + varhove[segashenVrah].lazyDelta;
 }
 
-void solve(){
-
-    for(int i = 0; i < 2*broiIzpalneniq; i++){
-        if(visited[i] == false){
-            dfs(i);
-        }
+void otpechataiDarvo(int segashenVrah){
+    if(segashenVrah == -1){
+        return ;
     }
 
-    while(s.empty() == false){
-        int naiOtgore = s.top();
-        s.pop();
+    cout<<"sega sme vav vrah "<<segashenVrah<<" koito obhavshta ot "<<varhove[segashenVrah].otKadeObhvashta<<" do "<<varhove[segashenVrah].doKadeObhvashta;
+    cout<<" maximalnoto e "<<varhove[segashenVrah].maximalno<<" lazy deltata e "<<varhove[segashenVrah].lazyDelta;
+    cout<<" lqvoto dete e "<<varhove[segashenVrah].lqvoDete<<" a dqsnoto dete e "<<varhove[segashenVrah].dqsnoDete<<endl;
 
-        if(reverseVisited[naiOtgore] == false){
-            cout<<"sega nai otgore e "<<naiOtgore<<" i puskame dfsto"<<endl;
-
-            sccCounter++;
-            reverseDfs(naiOtgore);
-        }
-    }
-
-    bool mojeLi = true;
-
-    for(int i = 0; i < broiIzpalneniq; i++){
-        if(whichSCC[i] == whichSCC[i + broiIzpalneniq]){
-            cout<<i<<"e v sushtiq komponent kato obratniq si"<<endl;
-            mojeLi = false;
-            break;
-        }
-    }
-
-    if(mojeLi == false){
-        cout<<"No"<<endl;
-    }else{
-        cout<<"Yes"<<endl;
-    }
+    otpechataiDarvo(varhove[segashenVrah].lqvoDete);
+    otpechataiDarvo(varhove[segashenVrah].dqsnoDete);
 }
 
 int main(){
@@ -105,30 +92,28 @@ int main(){
     broiIzpalneniq = 2*broiKoncerti;
 
     for(int i = 0; i < broiIzpalneniq; i++){
-        for(int j = (i/2 + 1)*2; j < broiIzpalneniq; j++){
-            cout<<"sega proverqvame za "<<i<<" i "<<j<<endl;
-            if((izpalneniq[i].start <= izpalneniq[j].start && izpalneniq[i].krai >= izpalneniq[j].start) ||
-                (izpalneniq[i].start <= izpalneniq[j].krai && izpalneniq[i].krai >= izpalneniq[j].krai) ||
-                (izpalneniq[j].start <= izpalneniq[i].start && izpalneniq[j].krai >= izpalneniq[i].start) ||
-                (izpalneniq[j].start <= izpalneniq[i].krai && izpalneniq[j].krai >= izpalneniq[i].krai))
-            {
-                cout<<"i te ne mogat zaedno"<<endl;
-
-                sasedstvo[i].push_back(j + broiIzpalneniq);
-                sasedstvo[j].push_back(i + broiIzpalneniq);
-            }
-        }
-
-        if(i%2 == 0){
-            sasedstvo[i + broiIzpalneniq].push_back(i + 1);
-            sasedstvo[i + 1].push_back(i + broiIzpalneniq);
-        }else{
-            sasedstvo[i + broiIzpalneniq].push_back(i - 1);
-            sasedstvo[i - 1].push_back(i + broiIzpalneniq);
-        }
+        naiGolqmo = max(naiGolqmo, izpalneniq[i].krai);
     }
 
-    solve();
+    cout<<"nai golqmoto e "<<naiGolqmo<<endl;
+
+    korenNomer = napraviDarvo(0, naiGolqmo);
+
+    cout<<"korena e s nomer "<<korenNomer<<endl;
+
+    otpechataiDarvo(korenNomer);
+    cout<<endl;
+
+    for(int i = 0; i < broiIzpalneniq; i++){
+        update(korenNomer, izpalneniq[i].start, izpalneniq[i].krai, 1);
+        cout<<"updatevame ot "<<izpalneniq[i].start<<" do "<<izpalneniq[i].krai<<endl;
+        cout<<"darvoto stava "<<endl;
+        otpechataiDarvo(korenNomer);
+        cout<<endl;
+    }
+
+    cout<<varhove[korenNomer].maximalno<<endl;
+
 
     return 0;
 }

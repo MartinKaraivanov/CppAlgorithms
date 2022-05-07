@@ -12,7 +12,7 @@ long long sasedstvo[111][111];
 
 long long startova[111][111];
 
-void copiraiMatricata(long long vKoq[111][111], long long otKoq[111][111]){
+void copiraiMatricata(long long (&vKoq)[111][111], long long otKoq[111][111]){
     for(long long i = 0; i <= broiGradove; i++){
         for(long long j = 0; j <= broiGradove; j++){
             vKoq[i][j] = otKoq[i][j];
@@ -48,7 +48,7 @@ long long umnoji(long long parvo, long long vtoro){
     return tuka;
 }
 
-void umnojiMatrici(long long parva[111][111], long long vtora[111][111]){
+void umnojiMatrici(long long (&parva)[111][111], long long vtora[111][111]){
     long long rezultatna[111][111];
 
     for(long long i = 0; i <= broiGradove; i++){
@@ -67,13 +67,13 @@ void umnojiMatrici(long long parva[111][111], long long vtora[111][111]){
     copiraiMatricata(parva, rezultatna);
 }
 
-void bavnoStepenuvane(long long matricata[111][111], long long stepen){
+void bavnoStepenuvane(long long (&matricata)[111][111], long long stepen){
     long long zaVdigane[111][111];
 
     copiraiMatricata(zaVdigane, matricata);
 
-    /*for(int i = 0; i <= broiGradove; i++){
-        for(int j = 0; j <= broiGradove; j++){
+    /*for(long long i = 0; i <= broiGradove; i++){
+        for(long long j = 0; j <= broiGradove; j++){
             matricata[i][j] = 0;
 
             if(i == j){
@@ -82,18 +82,18 @@ void bavnoStepenuvane(long long matricata[111][111], long long stepen){
         }
     }*/
 
-    for(int i = 1; i < stepen; i++){
+    for(long long i = 1; i < stepen; i++){
         umnojiMatrici(matricata, zaVdigane);
     }
 }
 
-void burzoStepenuvane(long long matricata[111][111], long long stepen){
+void burzoStepenuvane(long long (&matricata)[111][111], long long stepen){
     long long zaVdigane[111][111];
 
     copiraiMatricata(zaVdigane, matricata);
 
-    for(int i = 0; i <= broiGradove; i++){
-        for(int j = 0; j <= broiGradove; j++){
+    for(long long i = 1; i <= broiGradove; i++){
+        for(long long j = 1; j <= broiGradove; j++){
             matricata[i][j] = 0;
 
             if(i == j){
@@ -105,7 +105,7 @@ void burzoStepenuvane(long long matricata[111][111], long long stepen){
     long long copieStepen = stepen;
 
     while(copieStepen > 0){
-        if(copieStepen & 1 == 1){
+        if((copieStepen & 1) == 1){
             umnojiMatrici(matricata, zaVdigane);
         }
 
@@ -137,15 +137,21 @@ int main(){
     sasedstvo[0][0] = 1;
     startova[0][0] = 1;
 
-    int otgovor = 0;
+    long long otgovor = 0;
 
-    for(int i = 1; true; i++){
+    long long sumarno = 0;
+
+    for(long long i = 1; true; i++){
         copiraiMatricata(sasedstvo, startova);
 
         burzoStepenuvane(sasedstvo, i);
         //bavnoStepenuvane(sasedstvo, i);
 
-        if(sasedstvo[0][broiGradove] >= koiNaiKasPat){
+        sumarno += sasedstvo[1][broiGradove];
+
+        //cout<<"s daljina "<<i<<" ot "<<1<<" do "<<broiGradove<<" ima "<<sasedstvo[1][broiGradove]<<" na broi patishta"<<endl;
+
+        if(sumarno >= koiNaiKasPat){
             otgovor = i;
             break;
         }
@@ -153,7 +159,7 @@ int main(){
         //copiraiMatricata(sasedstvo, startova);
     }
 
-    cout<<otgovor - 1<<endl;
+    cout<<otgovor<<endl;
 
     /*long long lqvKrai = 1;
     long long desenKrai = (long long)1<<30;
@@ -165,20 +171,8 @@ int main(){
 
         //cout<<lqvKrai<<" "<<desenKrai<<" "<<sredata<<" "<<sasedstvo[0][broiGradove]<<endl;
 
-        /*for(int i = 0; i <= broiGradove; i++){
-            for(int j = 0; j <= broiGradove; j++){
-                cout<<sasedstvo[i][j]<<" ";
-            }
-            cout<<endl;
-        }
-        cout<<endl;*/
 
-        /*if(sasedstvo[0][broiGradove] == koiNaiKasPat){
-            cout<<sredata - 1<<endl;
-            return 0;
-        }
-
-        if(sasedstvo[0][broiGradove] > koiNaiKasPat){
+        if(sasedstvo[1][broiGradove] > koiNaiKasPat){
             //cout<<"poveche ot nujnoto e "<<endl;
             desenKrai = sredata;
         }else{
@@ -189,7 +183,7 @@ int main(){
         copiraiMatricata(sasedstvo, startova);
     }
 
-    long long otgovor = lqvKrai - 1;
+    long long otgovor = lqvKrai;
 
     cout<<otgovor<<endl;*/
 
