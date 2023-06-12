@@ -1,108 +1,128 @@
 #include<iostream>
 #include<vector>
+#include<set>
+#include<cmath>
 using namespace std;
 
-vector<int> sasedstvo[100010];
+set<int> sasedstvo[100010];
 
-bool toziSasedLiE[100010];
+set<int> poznati[100010];
 
 int broiVarhove;
+int broiRebra;
 
-bool darvoLiE = false;
+int podKolkoLek;
 
-int momentNaVlizane[100010];
-int momentNaIzlizane[100010];
-
-int vreme;
-
-int bashta[100010];
-
-int dalbochina[100010];
-
-void dfs(int segashenVrah, int dalb){
-    vreme++;
-    momentNaVlizane[segashenVrah] = vreme;
-
-    dalbochina[segashenVrah] = dalb;
-
-    for(int i = 0; i < (int)sasedstvo[segashenVrah].size(); i++){
-        if(dalbochina[sasedstvo[segashenVrah][i]] == 0){
-            dfs(sasedstvo[segashenVrah][i], dalb + 1);
-            bashta[sasedstvo[segashenVrah][i]] = segashenVrah;
-        }
-    }
-
-    vreme++;
-    momentNaIzlizane[segashenVrah] = vreme;
+bool golqmLiE(int koiVrah){
+    return (int)sasedstvo[koiVrah].size() >= podKolkoLek;
 }
 
 void initialize(int ID, int N, int M, int Q, vector<pair<int, int> > friendships){
 
-    if(M < N){
-        darvoLiE = true;
-    }
-
     broiVarhove = N;
+    broiRebra = M;
+
+    podKolkoLek = sqrt(M) + 1;
 
     for(int i = 0; i < (int)friendships.size(); i++){
-        sasedstvo[friendships[i].first].push_back(friendships[i].second);
-        sasedstvo[friendships[i].second].push_back(friendships[i].first);
+        sasedstvo[friendships[i].first].insert(friendships[i].second);
+        sasedstvo[friendships[i].second].insert(friendships[i].first);
     }
 
-    if(darvoLiE == true){
-        for(int i = 1; i <= broiVarhove; i++){
-            if(dalbochina[i] == 0){
-                dfs(i, 1);
+    for(int i = 1; i <= N; i++){
+        if(golqmLiE(i)){
+            for(set<int>::iterator j = sasedstvo[i].begin(); j != sasedstvo[i].end(); j++){
+                //if(golqmLiE(*j)){
+                    poznati[i].insert(sasedstvo[*j].begin(), sasedstvo[*j].end());
+                //}
             }
+            poznati[i].erase(i);
         }
     }
-
 }
 
 void connect(int ID, int x, int y){
-    sasedstvo[x].push_back(y);
-    sasedstvo[y].push_back(x);
+    sasedstvo[x].insert(y);
+    sasedstvo[y].insert(x);
+
+    if(golqmLiE(x)){
+        for(set<int>::iterator j = sasedstvo[x].begin(); j != sasedstvo[x].end(); j++){
+            //if(golqmLiE(*j)){
+                //poznati[x].insert(sasedstvo[*j].begin(), sasedstvo[*j].end());
+            for(set<int>::iterator i = sasedstvo[*j].begin(); i != sasedstvo[*j].end(); i++){
+                poznati[x].insert(*i);
+                if(*i != x){
+                    poznati[*i].insert(x);
+                }
+            }
+            //}
+        }
+        poznati[x].erase(x);
+    }
+
+    if(golqmLiE(y)){
+        for(set<int>::iterator j = sasedstvo[y].begin(); j != sasedstvo[y].end(); j++){
+            //if(golqmLiE(*j)){
+                //poznati[y].insert(sasedstvo[*j].begin(), sasedstvo[*j].end());
+            for(set<int>::iterator i = sasedstvo[*j].begin(); i != sasedstvo[*j].end(); i++){
+                poznati[y].insert(*i);
+                if(*i != y){
+                    poznati[*i].insert(y);
+                }
+            }
+            //}
+        }
+        poznati[y].erase(y);
+    }
 }
 
 bool question(int ID, int x, int y){
-    if(darvoLiE == false){
-        for(int i = 1; i <= broiVarhove; i++){
-            toziSasedLiE[i] = false;
-        }
 
-        for(int i = 0; i < (int)sasedstvo[x].size(); i++){
-            toziSasedLiE[sasedstvo[x][i]] = true;
-        }
+    bool xLekLiE = !golqmLiE(x);
+    bool yLekLiE = !golqmLiE(y);
 
-        bool stavaLi = false;
+    bool okLiE = false;
 
-        for(int i = 0; i < (int)sasedstvo[y].size(); i++){
-            if(toziSasedLiE[sasedstvo[y][i]] == true){
-                stavaLi = true;
+    if(xLekLiE && yLekLiE){
+        set<int>::iterator naParviq = sasedstvo[x].begin();
+        set<int>::iterator naVtoriq = sasedstvo[y].begin();
+
+        while(naParviq != sasedstvo[x].end() && naVtoriq != sasedstvo[y].end()){
+            if(*naParviq == *naVtoriq){
+                okLiE = true;
                 break;
+            }else{
+                if(*naParviq < *naVtoriq){
+                    naParviq++;
+                }else{
+                    naVtoriq++;
+                }
             }
         }
 
-        return stavaLi;
+    }else{
+        if(xLekLiE && !yLekLiE){
+            for(set<int>::iterator i = sasedstvo[x].begin(); i != sasedstvo[x].end(); i++){
+                if(sasedstvo[y].find(*i) != sasedstvo[y].end()){
+                    okLiE = true;
+                    break;
+                }
+            }
+        }else{
+            if(!xLekLiE && yLekLiE){
+                for(set<int>::iterator i = sasedstvo[y].begin(); i != sasedstvo[y].end(); i++){
+                    if(sasedstvo[x].find(*i) != sasedstvo[x].end()){
+                        okLiE = true;
+                        break;
+                    }
+                }
+            }else{
+                okLiE = poznati[x].find(y) != poznati[x].end();
+            }
+        }
     }
 
-    if(dalbochina[x] > dalbochina[y]){
-        swap(x, y);
-    }
-
-    if(dalbochina[x] == dalbochina[y] && bashta[x] == bashta[y]){
-        return true;
-    }
-
-    if(dalbochina[y] - dalbochina[x] != 2){
-        return false;
-    }
-
-    if(momentNaVlizane[x] < momentNaVlizane[y] && momentNaIzlizane[x] > momentNaIzlizane[y]){
-        return true;
-    }
-
-    return false;
+    return okLiE;
 }
 
 

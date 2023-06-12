@@ -1,48 +1,14 @@
 #include<iostream>
 #include<cmath>
+#include<algorithm>
 using namespace std;
 
 int broiKupchinki;
 
-int orehiVKupch[100010];
+long long orehiVKupch[100010];
 
-int kolkoTrDaSePoluchi;
-
-int smetniPremestvaniq(int start, int posoka){
-
-    int index = start;
-
-    bool parvotoLiE = true;
-
-    int tekushtPrenos = 0;
-
-    int obshtPrenos = 0;
-
-    while(index != start || parvotoLiE == true){
-        parvotoLiE = false;
-
-        int tuka = orehiVKupch[index] + tekushtPrenos;
-
-        int kolkoNiTrqbvat = kolkoTrDaSePoluchi - tuka;
-
-        //cout<<index<<" tekushtiq prenos e "<<tekushtPrenos<<" i tuka se poluchava "<<tuka<<" sledovatelno veche ni trqbvat "<<kolkoNiTrqbvat<<" i she prenesem na sledvashtiq ";
-        //cout<<-kolkoNiTrqbvat<<endl;
-
-        obshtPrenos += abs(kolkoNiTrqbvat);
-        tekushtPrenos = -kolkoNiTrqbvat;
-
-        index += posoka;
-
-        if(index < 0){
-            index = broiKupchinki - 1;
-        }
-        if(index >= broiKupchinki){
-            index = 0;
-        }
-    }
-
-    return obshtPrenos;
-}
+int suma;
+int nujno;
 
 int main(){
 
@@ -51,26 +17,43 @@ int main(){
 
     cin>>broiKupchinki;
 
-    int sbor = 0;
+    cin>>orehiVKupch[1];
+    suma += orehiVKupch[1];
+    orehiVKupch[1] = 0;
 
-    for(int i = 0; i < broiKupchinki; i++){
+    for(int i = 2; i <= broiKupchinki; i++){
         cin>>orehiVKupch[i];
-        sbor += orehiVKupch[i];
+        suma += orehiVKupch[i];
+
+        orehiVKupch[i] = orehiVKupch[i-1] - orehiVKupch[i];
     }
 
-    kolkoTrDaSePoluchi = sbor/broiKupchinki;
+    nujno = suma/broiKupchinki;
 
-    int naiMalkiqSbor = 1000000000;
-
-    for(int i = 0; i < broiKupchinki; i++){
-        int tukaNadqsno = smetniPremestvaniq(i, 1);
-
-        cout<<i<<" "<<tukaNadqsno<<endl;
-
-        naiMalkiqSbor = min(naiMalkiqSbor, tukaNadqsno);
+    for(int i = 2; i <= broiKupchinki; i++){
+        orehiVKupch[i] += (i-1)*nujno;
     }
 
-    cout<<naiMalkiqSbor<<endl;
+    sort(orehiVKupch+1, orehiVKupch+broiKupchinki+1);
+
+    int sredata = (broiKupchinki + 1)/2;
+
+    long long broiPremestvaniq = 0;
+
+    for(int i = 1; i < sredata; i++){
+        broiPremestvaniq -= orehiVKupch[i];
+    }
+
+    for(int i = sredata+1; i <= broiKupchinki; i++){
+        broiPremestvaniq += orehiVKupch[i];
+    }
+
+    if(broiKupchinki % 2 == 0){
+        broiPremestvaniq -= orehiVKupch[sredata];
+    }
+
+    cout<<broiPremestvaniq<<endl;
+
 
     return 0;
 }
